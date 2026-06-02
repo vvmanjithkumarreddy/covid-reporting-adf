@@ -71,10 +71,15 @@
 				"typeProperties": {
 					"ifFalseActivities": [
 						{
-							"name": "Fail1",
+							"name": "Data Validation Fail",
+							"description": "Since the columns in the input dataset didnot match we want to fail pipeline to not corrupt downstream data systems",
 							"type": "Fail",
 							"dependsOn": [],
-							"userProperties": []
+							"userProperties": [],
+							"typeProperties": {
+								"message": "Input Dataset Column Count Mismatch",
+								"errorCode": "509"
+							}
 						}
 					],
 					"ifTrueActivities": [
