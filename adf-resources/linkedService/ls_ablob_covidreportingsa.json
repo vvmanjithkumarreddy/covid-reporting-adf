@@ -1,0 +1,12 @@
+{
+	"name": "ls_ablob_covidreportingsa",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"serviceEndpoint": "https://covidreportingsa1998.blob.core.windows.net/",
+			"accountKind": "StorageV2"
+		}
+	}
+}
