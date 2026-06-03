@@ -74,14 +74,6 @@
 				]
 			}
 		],
-		"parameters": {
-			"source_relative_url": {
-				"type": "string"
-			},
-			"sink_file_name": {
-				"type": "string"
-			}
-		},
 		"annotations": []
 	}
 }
