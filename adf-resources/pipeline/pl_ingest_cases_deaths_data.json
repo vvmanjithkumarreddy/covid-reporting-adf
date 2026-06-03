@@ -1,0 +1,7 @@
+{
+	"name": "pl_ingest_cases_deaths_data",
+	"properties": {
+		"description": "creating a pipeline to ingest cases and deaths data from http link to adls",
+		"annotations": []
+	}
+}
