@@ -102,10 +102,11 @@
 									"referenceName": "ds_ecdc_raw_csv_http",
 									"type": "DatasetReference",
 									"parameters": {
-										"sourceBaseURL": {
-											"value": "@item().sourceRelativeURL",
+										"source_base_url": {
+											"value": "@item().sourceBaseURL",
 											"type": "Expression"
-										}
+										},
+										"source_relative_url": "@item().sourceRelativeURL"
 									}
 								}
 							],
@@ -114,7 +115,7 @@
 									"referenceName": "ds_ecdc_raw_csv_dl",
 									"type": "DatasetReference",
 									"parameters": {
-										"file_name": {
+										"sink_file_name": {
 											"value": "@item().sinkFileName",
 											"type": "Expression"
 										}
