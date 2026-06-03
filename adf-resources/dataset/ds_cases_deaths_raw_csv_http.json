@@ -1,0 +1,22 @@
+{
+	"name": "ds_cases_deaths_raw_csv_http",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_http_ecdc",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "/cases_deaths.csv"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
