@@ -3,14 +3,14 @@
 	"properties": {
 		"description": "linked service to ingest ecdc data through http",
 		"parameters": {
-			"sourceBaseURL": {
+			"BaseURL": {
 				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "HttpServer",
 		"typeProperties": {
-			"url": "@{linkedService().sourceBaseURL}",
+			"url": "@{linkedService().BaseURL}",
 			"enableServerCertificateValidation": false,
 			"authenticationType": "Anonymous"
 		}
