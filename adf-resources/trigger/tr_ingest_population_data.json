@@ -1,6 +1,7 @@
 {
 	"name": "tr_ingest_population_data",
 	"properties": {
+		"description": "trigger to ingest population data ",
 		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
