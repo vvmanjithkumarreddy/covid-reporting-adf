@@ -1,7 +1,7 @@
 {
-	"name": "tr_ingest_population_data",
+	"name": "tr_ingest_population_data_blob",
 	"properties": {
-		"description": "trigger to ingest population data ",
+		"description": "we are creating a storage trigger to ingest population data from blob to adls",
 		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
