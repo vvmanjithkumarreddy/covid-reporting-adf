@@ -9,10 +9,6 @@
 				"pipelineReference": {
 					"referenceName": "pl_ingest_ecdc_data",
 					"type": "PipelineReference"
-				},
-				"parameters": {
-					"source_relative_url": "hospital_admissions.csv",
-					"sink_file_name": "hospital_admissions.csv"
 				}
 			}
 		],
@@ -21,7 +17,7 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2026-06-03T17:40:00",
+				"startTime": "2026-06-04T19:55:00",
 				"timeZone": "India Standard Time"
 			}
 		}

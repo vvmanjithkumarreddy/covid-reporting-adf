@@ -3,10 +3,19 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_http_ecdc",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"BaseURL": {
+					"value": "@dataset().source_base_url",
+					"type": "Expression"
+				}
+			}
 		},
 		"parameters": {
-			"relative_url": {
+			"source_base_url": {
+				"type": "string"
+			},
+			"source_relative_url": {
 				"type": "string"
 			}
 		},
@@ -16,7 +25,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "@dataset().relative_url",
+					"value": "@dataset().source_relative_url",
 					"type": "Expression"
 				}
 			},
