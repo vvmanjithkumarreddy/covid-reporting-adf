@@ -1,0 +1,87 @@
+{
+	"name": "pl_ingest_ecdc_data",
+	"properties": {
+		"description": "creating a pipeline to ingest cases and deaths data from http link to adls",
+		"activities": [
+			{
+				"name": "Copy ecdc data",
+				"description": "copying ecdc cases and deaths data from http address to data lake",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_ecdc_raw_csv_http",
+						"type": "DatasetReference",
+						"parameters": {
+							"relative_url": {
+								"value": "@pipeline().parameters.source_relative_url",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_ecdc_raw_csv_dl",
+						"type": "DatasetReference",
+						"parameters": {
+							"file_name": {
+								"value": "@pipeline().parameters.sink_file_name",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"source_relative_url": {
+				"type": "string"
+			},
+			"sink_file_name": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}
