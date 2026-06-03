@@ -1,7 +1,7 @@
 {
 	"name": "ls_http_ecdc",
 	"properties": {
-		"description": "lniked service to ingest ecdc data through http",
+		"description": "linked service to ingest ecdc data through http",
 		"annotations": [],
 		"type": "HttpServer",
 		"typeProperties": {
