@@ -1,10 +1,10 @@
 {
-	"name": "pl_ingest_cases_deaths_data",
+	"name": "pl_ingest_ecdc_data",
 	"properties": {
 		"description": "creating a pipeline to ingest cases and deaths data from http link to adls",
 		"activities": [
 			{
-				"name": "Copy data",
+				"name": "Copy ecdc data",
 				"description": "copying ecdc cases and deaths data from http address to data lake",
 				"type": "Copy",
 				"dependsOn": [],
