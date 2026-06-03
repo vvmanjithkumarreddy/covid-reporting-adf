@@ -15,7 +15,7 @@
 			"type": "string",
 			"defaultValue": "https://covidreportingdl1998.dfs.core.windows.net/"
 		},
-		"tr_ingest_population_data_properties_typeProperties_scope": {
+		"tr_ingest_population_data_blob_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/4b3f9a5b-93de-4658-ab32-468834b6023f/resourceGroups/covid-reporting-rg/providers/Microsoft.Storage/storageAccounts/covidreportingsa1998"
 		}
@@ -345,11 +345,11 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/tr_ingest_population_data')]",
+			"name": "[concat(parameters('factoryName'), '/tr_ingest_population_data_blob')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "trigger to ingest population data ",
+				"description": "we are creating a storage trigger to ingest population data from blob to adls",
 				"annotations": [],
 				"runtimeState": "Started",
 				"pipelines": [
@@ -365,7 +365,7 @@
 				"typeProperties": {
 					"blobPathBeginsWith": "/population/blobs/population_by_age.tsv.gz",
 					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('tr_ingest_population_data_properties_typeProperties_scope')]",
+					"scope": "[parameters('tr_ingest_population_data_blob_properties_typeProperties_scope')]",
 					"events": [
 						"Microsoft.Storage.BlobCreated"
 					]
