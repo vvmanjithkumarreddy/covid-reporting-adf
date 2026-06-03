@@ -102,7 +102,7 @@
 									"referenceName": "ds_ecdc_raw_csv_http",
 									"type": "DatasetReference",
 									"parameters": {
-										"relative_url": {
+										"sourceBaseURL": {
 											"value": "@item().sourceRelativeURL",
 											"type": "Expression"
 										}
