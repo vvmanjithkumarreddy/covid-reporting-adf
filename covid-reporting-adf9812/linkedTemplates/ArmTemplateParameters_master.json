@@ -12,13 +12,7 @@
 			"value": "https://covidreportingdl1998.dfs.core.windows.net/"
 		},
 		"ls_http_ecdc_properties_typeProperties_url": {
-			"value": "https://raw.githubusercontent.com/cloudboxacademy/covid19/refs/heads/main/ecdc_data/"
-		},
-		"tr_ingest_ecdc_data_properties_pl_ingest_ecdc_data_parameters_source_relative_url": {
-			"value": "hospital_admissions.csv"
-		},
-		"tr_ingest_ecdc_data_properties_pl_ingest_ecdc_data_parameters_sink_file_name": {
-			"value": "hospital_admissions.csv"
+			"value": "@{linkedService().BaseURL}"
 		},
 		"tr_ingest_population_data_blob_properties_typeProperties_scope": {
 			"value": "/subscriptions/4b3f9a5b-93de-4658-ab32-468834b6023f/resourceGroups/covid-reporting-rg/providers/Microsoft.Storage/storageAccounts/covidreportingsa1998"

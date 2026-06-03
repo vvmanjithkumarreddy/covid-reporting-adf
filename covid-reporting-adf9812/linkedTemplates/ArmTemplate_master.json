@@ -17,15 +17,7 @@
 		},
 		"ls_http_ecdc_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://raw.githubusercontent.com/cloudboxacademy/covid19/refs/heads/main/ecdc_data/"
-		},
-		"tr_ingest_ecdc_data_properties_pl_ingest_ecdc_data_parameters_source_relative_url": {
-			"type": "string",
-			"defaultValue": "hospital_admissions.csv"
-		},
-		"tr_ingest_ecdc_data_properties_pl_ingest_ecdc_data_parameters_sink_file_name": {
-			"type": "string",
-			"defaultValue": "hospital_admissions.csv"
+			"defaultValue": "@{linkedService().BaseURL}"
 		},
 		"tr_ingest_population_data_blob_properties_typeProperties_scope": {
 			"type": "string",
@@ -66,12 +58,6 @@
 					},
 					"ls_http_ecdc_properties_typeProperties_url": {
 						"value": "[parameters('ls_http_ecdc_properties_typeProperties_url')]"
-					},
-					"tr_ingest_ecdc_data_properties_pl_ingest_ecdc_data_parameters_source_relative_url": {
-						"value": "[parameters('tr_ingest_ecdc_data_properties_pl_ingest_ecdc_data_parameters_source_relative_url')]"
-					},
-					"tr_ingest_ecdc_data_properties_pl_ingest_ecdc_data_parameters_sink_file_name": {
-						"value": "[parameters('tr_ingest_ecdc_data_properties_pl_ingest_ecdc_data_parameters_sink_file_name')]"
 					},
 					"tr_ingest_population_data_blob_properties_typeProperties_scope": {
 						"value": "[parameters('tr_ingest_population_data_blob_properties_typeProperties_scope')]"
