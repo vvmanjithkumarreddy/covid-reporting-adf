@@ -9,6 +9,10 @@
 				"pipelineReference": {
 					"referenceName": "pl_ingest_ecdc_data",
 					"type": "PipelineReference"
+				},
+				"parameters": {
+					"source_relative_url": "hospital_admissions.csv",
+					"sink_file_name": "hospital_admissions.csv"
 				}
 			}
 		],
