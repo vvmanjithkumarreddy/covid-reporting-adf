@@ -33,7 +33,10 @@
 					"name": "PivotCounts"
 				},
 				{
-					"name": "lookup1"
+					"name": "lookupCountry"
+				},
+				{
+					"name": "SelectRequiredColumns"
 				}
 			],
 			"scriptLines": [
@@ -84,10 +87,21 @@
 				"     count = sum(daily_count),",
 				"     columnNaming: '$V_$N',",
 				"     lateral: false) ~> PivotCounts",
-				"PivotCounts, CountryLookup lookup(PivotCounts@country == PivotCounts@country,",
+				"PivotCounts, CountryLookup lookup(PivotCounts@country == CountryLookup@country,",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookup1"
+				"     broadcast: 'auto')~> lookupCountry",
+				"lookupCountry select(mapColumn(",
+				"          country = PivotCounts@country,",
+				"          country_code_2_digit,",
+				"          country_code_3_digit,",
+				"          population = PivotCounts@population,",
+				"          source,",
+				"          reported_date,",
+				"          continent",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> SelectRequiredColumns"
 			]
 		}
 	}
