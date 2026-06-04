@@ -34,9 +34,6 @@
 				},
 				{
 					"name": "lookupCountry"
-				},
-				{
-					"name": "SelectRequiredColumns"
 				}
 			],
 			"scriptLines": [
@@ -90,18 +87,7 @@
 				"PivotCounts, CountryLookup lookup(PivotCounts@country == CountryLookup@country,",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookupCountry",
-				"lookupCountry select(mapColumn(",
-				"          country = PivotCounts@country,",
-				"          country_code_2_digit,",
-				"          country_code_3_digit,",
-				"          population = PivotCounts@population,",
-				"          source,",
-				"          reported_date,",
-				"          continent",
-				"     ),",
-				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> SelectRequiredColumns"
+				"     broadcast: 'auto')~> lookupCountry"
 			]
 		}
 	}
