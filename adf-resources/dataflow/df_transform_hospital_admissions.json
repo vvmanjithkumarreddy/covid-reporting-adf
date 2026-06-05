@@ -29,6 +29,9 @@
 				},
 				{
 					"name": "SelectOnlyRequiredColumns"
+				},
+				{
+					"name": "split1"
 				}
 			],
 			"scriptLines": [
@@ -82,7 +85,9 @@
 				"          source",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> SelectOnlyRequiredColumns"
+				"     skipDuplicateMapOutputs: false) ~> SelectOnlyRequiredColumns",
+				"SelectOnlyRequiredColumns split(indicator=='Weekly new hospital admissions per 100k' || indicator=='Weekly new ICU admissions per 100k',",
+				"     disjoint: false) ~> split1@(Weekly, Daily)"
 			]
 		}
 	}
