@@ -1,5 +1,5 @@
 {
-	"name": "ds_hospital_admissions_weekly",
+	"name": "ds_processed_hospital_admissions_weekly",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_adls_covidreportingdl",
