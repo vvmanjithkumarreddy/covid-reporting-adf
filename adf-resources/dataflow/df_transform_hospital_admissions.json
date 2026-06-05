@@ -17,6 +17,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "CountryLookup"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_lookup_date",
+						"type": "DatasetReference"
+					},
+					"name": "DateLookup"
 				}
 			],
 			"sinks": [],
@@ -32,6 +39,15 @@
 				},
 				{
 					"name": "split1"
+				},
+				{
+					"name": "DeriveECDCyearweek"
+				},
+				{
+					"name": "AggregateStartdateAndEnddate"
+				},
+				{
+					"name": "JoinWithDate"
 				}
 			],
 			"scriptLines": [
@@ -59,6 +75,24 @@
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
 				"     ignoreNoFilesFound: false) ~> CountryLookup",
+				"source(output(",
+				"          date_key as integer,",
+				"          date as date,",
+				"          year as short,",
+				"          month as short,",
+				"          day as short,",
+				"          day_name as string,",
+				"          day_of_year as short,",
+				"          week_of_month as short,",
+				"          week_of_year as short,",
+				"          month_name as string,",
+				"          year_month as integer,",
+				"          year_week as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> DateLookup",
 				"HospitalAdmissionsData select(mapColumn(",
 				"          country,",
 				"          indicator,",
@@ -87,7 +121,16 @@
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> SelectOnlyRequiredColumns",
 				"SelectOnlyRequiredColumns split(indicator=='Weekly new hospital admissions per 100k' || indicator=='Weekly new ICU admissions per 100k',",
-				"     disjoint: false) ~> split1@(Weekly, Daily)"
+				"     disjoint: false) ~> split1@(Weekly, Daily)",
+				"DateLookup derive(ecdc_year_week = toString(year) + '-W' + lpad(toString(week_of_year), 2, '0')) ~> DeriveECDCyearweek",
+				"DeriveECDCyearweek aggregate(groupBy(ecdc_year_week),",
+				"     week_start_date = min(date),",
+				"          week_end_date = max(date)) ~> AggregateStartdateAndEnddate",
+				"split1@Weekly, AggregateStartdateAndEnddate join(reported_year_week == ecdc_year_week,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinWithDate"
 			]
 		}
 	}
