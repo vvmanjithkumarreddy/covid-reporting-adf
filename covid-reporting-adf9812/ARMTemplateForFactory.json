@@ -471,6 +471,54 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pl_process_population_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "This population will process the population data as per requirements",
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_transform_population",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"CountryLookup": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_transform_population')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_process_testing_data')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -903,6 +951,34 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_processed_population')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_adls_covidreportingdl",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "population",
+						"fileSystem": "processed"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_adls_covidreportingdl')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_processed_testing')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1046,6 +1122,44 @@
 					},
 					{
 						"name": "url",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_adls_covidreportingdl')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_raw_population')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_adls_covidreportingdl",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "population_by_age.tsv",
+						"folderPath": "population",
+						"fileSystem": "raw"
+					},
+					"columnDelimiter": "\t",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "indic_de",
+						"type": "String"
+					},
+					{
+						"name": "geo\\time\t2008 \t2009 \t2010 \t2011 \t2012 \t2013 \t2014 \t2015 \t2016 \t2017 \t2018 \t2019 ",
 						"type": "String"
 					}
 				]
@@ -1629,6 +1743,152 @@
 				"[concat(variables('factoryId'), '/datasets/ds_lookup_date')]",
 				"[concat(variables('factoryId'), '/datasets/ds_processed_hospital_admissions_weekly')]",
 				"[concat(variables('factoryId'), '/datasets/ds_processed_hospital_admissions_daily')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_transform_population')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_raw_population",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_lookup_country",
+								"type": "DatasetReference"
+							},
+							"name": "CountryLookup"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_processed_population",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "pivot1"
+						},
+						{
+							"name": "select2"
+						},
+						{
+							"name": "MapDrifted1",
+							"description": "Creates an explicit mapping for each drifted column"
+						},
+						{
+							"name": "join1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          {indic_de,geo\\time} as string,",
+						"          {2008 } as string,",
+						"          {2009 } as string,",
+						"          {2010 } as string,",
+						"          {2011 } as string,",
+						"          {2012 } as string,",
+						"          {2013 } as string,",
+						"          {2014 } as string,",
+						"          {2015 } as string,",
+						"          {2016 } as string,",
+						"          {2017 } as string,",
+						"          {2018 } as string,",
+						"          {2019 } as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     inferDriftedColumnTypes: true,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source(output(",
+						"          country as string,",
+						"          country_code_2_digit as string,",
+						"          country_code_3_digit as string,",
+						"          continent as string,",
+						"          population as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     inferDriftedColumnTypes: true,",
+						"     ignoreNoFilesFound: false) ~> CountryLookup",
+						"source1 derive(age_group = split({indic_de,geo\\time},',')[1],",
+						"          country_code_2_digit = split({indic_de,geo\\time},',')[2],",
+						"          {2019 } = toDecimal(regexReplace({2019 }, '[a-z]', ''), 4, 2)) ~> derivedColumn1",
+						"derivedColumn1 select(mapColumn(",
+						"          country_code_2_digit,",
+						"          age_group,",
+						"          {percentage_2019 } = {2019 }",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 filter(!isNull({percentage_2019 })) ~> filter1",
+						"filter1 pivot(groupBy(country_code_2_digit),",
+						"     pivotBy(age_group),",
+						"     age_group = sum({percentage_2019 }),",
+						"     columnNaming: '$V$N',",
+						"     lateral: true) ~> pivot1",
+						"join1 select(mapColumn(",
+						"          country,",
+						"          country_code_2_digit = pivot1@country_code_2_digit,",
+						"          country_code_3_digit,",
+						"          population,",
+						"          age_group_0_14 = PC_Y0_14age_group,",
+						"          age_group_15_24 = PC_Y15_24age_group,",
+						"          age_group_25_49 = PC_Y25_49age_group,",
+						"          age_group_50_64 = PC_Y50_64age_group,",
+						"          age_group_65_79 = PC_Y65_79age_group,",
+						"          age_group_80_max = PC_Y80_MAXage_group",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2",
+						"pivot1 derive(PC_Y0_14age_group = toDecimal(byName('PC_Y0_14age_group')),",
+						"          PC_Y15_24age_group = toDecimal(byName('PC_Y15_24age_group')),",
+						"          PC_Y25_49age_group = toDecimal(byName('PC_Y25_49age_group')),",
+						"          PC_Y50_64age_group = toDecimal(byName('PC_Y50_64age_group')),",
+						"          PC_Y65_79age_group = toDecimal(byName('PC_Y65_79age_group')),",
+						"          PC_Y80_MAXage_group = toDecimal(byName('PC_Y80_MAXage_group'))) ~> MapDrifted1",
+						"MapDrifted1, CountryLookup join(pivot1@country_code_2_digit == CountryLookup@country_code_2_digit,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"select2 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['population_by_age.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_raw_population')]",
+				"[concat(variables('factoryId'), '/datasets/ds_lookup_country')]",
+				"[concat(variables('factoryId'), '/datasets/ds_processed_population')]"
 			]
 		},
 		{
