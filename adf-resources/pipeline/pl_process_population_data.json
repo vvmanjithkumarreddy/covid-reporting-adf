@@ -1,0 +1,7 @@
+{
+	"name": "pl_process_population_data",
+	"properties": {
+		"description": "This population will process the population data as per requirements",
+		"annotations": []
+	}
+}
