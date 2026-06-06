@@ -19,7 +19,15 @@
 					"name": "CountryLookup"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_processed_population",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
@@ -34,14 +42,14 @@
 					"name": "pivot1"
 				},
 				{
-					"name": "lookup1"
+					"name": "select2"
 				},
 				{
 					"name": "MapDrifted1",
 					"description": "Creates an explicit mapping for each drifted column"
 				},
 				{
-					"name": "select2"
+					"name": "join1"
 				}
 			],
 			"scriptLines": [
@@ -91,30 +99,40 @@
 				"     age_group = sum({percentage_2019 }),",
 				"     columnNaming: '$V$N',",
 				"     lateral: true) ~> pivot1",
-				"MapDrifted1, CountryLookup lookup(pivot1@country_code_2_digit == CountryLookup@country_code_2_digit,",
-				"     multiple: false,",
-				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookup1",
-				"pivot1 derive(PC_Y0_14x = toDecimal(byName('PC_Y0_14x')),",
-				"          PC_Y15_24x = toDecimal(byName('PC_Y15_24x')),",
-				"          PC_Y25_49x = toDecimal(byName('PC_Y25_49x')),",
-				"          PC_Y50_64x = toDecimal(byName('PC_Y50_64x')),",
-				"          PC_Y65_79x = toDecimal(byName('PC_Y65_79x')),",
-				"          PC_Y80_MAXx = toDecimal(byName('PC_Y80_MAXx'))) ~> MapDrifted1",
-				"lookup1 select(mapColumn(",
+				"join1 select(mapColumn(",
 				"          country,",
 				"          country_code_2_digit = pivot1@country_code_2_digit,",
 				"          country_code_3_digit,",
 				"          population,",
-				"          age_group_0_14 = PC_Y0_14x,",
-				"          age_group_15_24 = PC_Y15_24x,",
-				"          age_group_25_49 = PC_Y25_49x,",
-				"          age_group_50_64 = PC_Y50_64x,",
-				"          age_group_65_79 = PC_Y65_79x,",
-				"          age_group_80_max = PC_Y80_MAXx",
+				"          age_group_0_14 = PC_Y0_14age_group,",
+				"          age_group_15_24 = PC_Y15_24age_group,",
+				"          age_group_25_49 = PC_Y25_49age_group,",
+				"          age_group_50_64 = PC_Y50_64age_group,",
+				"          age_group_65_79 = PC_Y65_79age_group,",
+				"          age_group_80_max = PC_Y80_MAXage_group",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select2"
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"pivot1 derive(PC_Y0_14age_group = toDecimal(byName('PC_Y0_14age_group')),",
+				"          PC_Y15_24age_group = toDecimal(byName('PC_Y15_24age_group')),",
+				"          PC_Y25_49age_group = toDecimal(byName('PC_Y25_49age_group')),",
+				"          PC_Y50_64age_group = toDecimal(byName('PC_Y50_64age_group')),",
+				"          PC_Y65_79age_group = toDecimal(byName('PC_Y65_79age_group')),",
+				"          PC_Y80_MAXage_group = toDecimal(byName('PC_Y80_MAXage_group'))) ~> MapDrifted1",
+				"MapDrifted1, CountryLookup join(pivot1@country_code_2_digit == CountryLookup@country_code_2_digit,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['population_by_age.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
 	}
