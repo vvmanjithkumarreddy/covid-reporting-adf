@@ -7,7 +7,7 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "covid-reporting-adf9812"
 		},
-		"tr_ingest_population_data_blob_properties_typeProperties_scope": {
+		"tr_population_data_arrived_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/4b3f9a5b-93de-4658-ab32-468834b6023f/resourceGroups/covid-reporting-rg/providers/Microsoft.Storage/storageAccounts/covidreportingsa1998"
 		}
@@ -1823,17 +1823,77 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/tr_ingest_population_data_blob')]",
+			"name": "[concat(parameters('factoryName'), '/pl_execute_population_pipelines')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Ingest Population data",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pl_ingest_population_data",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Execute Process Population Data",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute Ingest Population data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pl_process_population_data",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Execute"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pl_ingest_population_data')]",
+				"[concat(variables('factoryId'), '/pipelines/pl_process_population_data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/tr_population_data_arrived')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "we are creating a storage trigger to ingest population data from blob to adls",
 				"annotations": [],
 				"runtimeState": "Started",
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "pl_ingest_population_data",
+							"referenceName": "pl_execute_population_pipelines",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -1843,14 +1903,14 @@
 				"typeProperties": {
 					"blobPathBeginsWith": "/population/blobs/population_by_age.tsv.gz",
 					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('tr_ingest_population_data_blob_properties_typeProperties_scope')]",
+					"scope": "[parameters('tr_population_data_arrived_properties_typeProperties_scope')]",
 					"events": [
 						"Microsoft.Storage.BlobCreated"
 					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/pl_ingest_population_data')]"
+				"[concat(variables('factoryId'), '/pipelines/pl_execute_population_pipelines')]"
 			]
 		}
 	]
