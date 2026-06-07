@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "covid-reporting-adf9812"
 		},
+		"ls_sql_covid_db_password": {
+			"value": ""
+		},
 		"ls_ablob_covidreportingsa_properties_typeProperties_serviceEndpoint": {
 			"value": "https://covidreportingsa1998.blob.core.windows.net/"
 		},
@@ -16,6 +19,15 @@
 		},
 		"tr_ingest_population_data_blob_properties_typeProperties_scope": {
 			"value": "/subscriptions/4b3f9a5b-93de-4658-ab32-468834b6023f/resourceGroups/covid-reporting-rg/providers/Microsoft.Storage/storageAccounts/covidreportingsa1998"
+		},
+		"ls_sql_covid_db_properties_typeProperties_server": {
+			"value": "covid-srv-1998.database.windows.net"
+		},
+		"ls_sql_covid_db_properties_typeProperties_database": {
+			"value": "covid-db"
+		},
+		"ls_sql_covid_db_properties_typeProperties_userName": {
+			"value": "adm"
 		},
 		"containerUri": {
 			"value": ""
