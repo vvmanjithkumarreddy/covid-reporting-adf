@@ -17,9 +17,6 @@
 		"ls_http_ecdc_properties_typeProperties_url": {
 			"value": "@{linkedService().BaseURL}"
 		},
-		"tr_ingest_population_data_blob_properties_typeProperties_scope": {
-			"value": "/subscriptions/4b3f9a5b-93de-4658-ab32-468834b6023f/resourceGroups/covid-reporting-rg/providers/Microsoft.Storage/storageAccounts/covidreportingsa1998"
-		},
 		"ls_sql_covid_db_properties_typeProperties_server": {
 			"value": "covid-srv-1998.database.windows.net"
 		},
@@ -28,6 +25,9 @@
 		},
 		"ls_sql_covid_db_properties_typeProperties_userName": {
 			"value": "adm"
+		},
+		"tr_ingest_population_data_blob_properties_typeProperties_scope": {
+			"value": "/subscriptions/4b3f9a5b-93de-4658-ab32-468834b6023f/resourceGroups/covid-reporting-rg/providers/Microsoft.Storage/storageAccounts/covidreportingsa1998"
 		},
 		"containerUri": {
 			"value": ""
