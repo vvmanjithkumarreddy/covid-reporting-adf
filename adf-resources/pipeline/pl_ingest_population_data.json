@@ -49,6 +49,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -182,6 +183,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "Ingest"
+		},
 		"annotations": [],
 		"lastPublishTime": "2026-05-30T14:07:59Z"
 	},
