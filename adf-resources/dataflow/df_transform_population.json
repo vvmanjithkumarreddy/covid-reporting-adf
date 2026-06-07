@@ -50,6 +50,9 @@
 				},
 				{
 					"name": "join1"
+				},
+				{
+					"name": "sort1"
 				}
 			],
 			"scriptLines": [
@@ -124,7 +127,9 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
-				"select2 sink(allowSchemaDrift: true,",
+				"select2 sort(asc(country, true),",
+				"     caseInsensitive: true) ~> sort1",
+				"sort1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['population_by_age.csv'],",
 				"     umask: 0022,",
